@@ -23,7 +23,8 @@
             android:name=".SignInGoogle"
             android:label="@string/title_activity_sign_in_google"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SigninActivity"></activity>
+        <activity android:name=".Signin.SigninActivity" />
+        <activity android:name=".Signin.CountrycodeListActivity"></activity>
     </application>
 
 </manifest>

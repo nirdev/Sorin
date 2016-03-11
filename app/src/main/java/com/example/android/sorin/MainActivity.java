@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.sorin.Signin.SigninActivity;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(getApplicationContext(), SigninActivity.class);
+        startActivity(intent);
 
         //Account stuff
         settings = getSharedPreferences("FamousQuotesAndroid", 0);

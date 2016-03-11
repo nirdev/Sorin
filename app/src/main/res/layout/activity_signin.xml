@@ -1,12 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.android.sorin.SigninActivity">
+    tools:context=".Signin.SigninActivity">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/background_with_shadow">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="210dp"
+            android:layout_gravity="right|center_vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:textSize="18sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/country_code_confirmation_text"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/user_phone_signup_XMLID"
+                android:inputType="phone"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_umber_hint"
+                android:layout_above="@+id/next_button1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="27dp" />
+
+            <EditText
+                android:id="@+id/country_code_signup_XMLID"
+                android:hint="@string/plus_icon"
+                android:editable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/user_phone_signup_XMLID"
+                android:layout_toStartOf="@+id/user_phone_signup_XMLID"
+                android:layout_alignBottom="@+id/user_phone_signup_XMLID"
+                android:layout_alignTop="@+id/user_phone_signup_XMLID" />
+
+
+            <Button
+                android:id="@+id/choose_country_button_ID"
+                android:layout_width="match_parent"
+                android:background="@drawable/countrybuttonimage"
+                android:layout_height="50dp"
+                android:layout_above="@+id/user_phone_signup_XMLID"
+                android:text="@string/Choose_your_country"
+                android:textAllCaps="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="chooseCountryFragment"/>
+
+            <Button
+                android:id="@+id/next_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next_SigninActvity"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:onClick="onClickSigninBtn"/>
+
+
+        </RelativeLayout>
+    </FrameLayout>
 
 </RelativeLayout>

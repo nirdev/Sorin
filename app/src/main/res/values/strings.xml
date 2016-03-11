@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Sorin</string>
     <string name="title_activity_sign_in_google">SignInGoogle</string>
+    <string name="phone_umber_hint">Phone number</string>
+    <string name="title_activity_countrycode">Choose your country</string>
+    <string name="plus_icon" translatable="false">+</string>
+    <string name="country_code_confirmation_text">Please confirm your country code and enter your phone number.</string>
+    <string name="Choose_your_country">Choose your country</string>
+    <string name="next_SigninActvity">Next</string>
 </resources>
