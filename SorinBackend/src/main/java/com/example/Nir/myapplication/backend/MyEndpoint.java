@@ -6,6 +6,7 @@
 
 package com.example.Nir.myapplication.backend;
 
+
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -14,7 +15,6 @@ import com.google.api.server.spi.response.CollectionResponse;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.google.appengine.api.oauth.OAuthRequestException;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import javax.inject.Named;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+//TODO: Delet after building User Framework
 /** An endpoint class we are exposing */
 @Api(
   name = "myApi",
@@ -40,14 +41,20 @@ public class MyEndpoint {
     private static final int DEFAULT_LIST_LIMIT = 20;
 
     /** A simple endpoint method that takes a name and says Hi back */
-    @ApiMethod(name = "sayHi")
-    public MyBean sayHi(@Named("name") String name,User user) throws OAuthRequestException {
+    @ApiMethod(name = "sayHi"  ,  scopes = {Constants.EMAIL_SCOPE},
+            clientIds = {Constants.WEB_CLIENT_ID,
+                    Constants.ANDROID_CLIENT_ID,
+                    com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
+            audiences = {Constants.ANDROID_AUDIENCE})
 
-        if (user == null) {
-            throw new OAuthRequestException("Couldn't authenticate");
-        }
+    public MyBean sayHi(@Named("name") String name, User user)   {
+
         MyBean response = new MyBean();
-        response.setData("Email: " + user.getEmail());
+
+        if (user != null)
+        {
+            response.setData(user.getEmail());
+        }
 
         return response;
     }

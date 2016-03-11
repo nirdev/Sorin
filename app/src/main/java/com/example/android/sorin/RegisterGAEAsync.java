@@ -21,27 +21,31 @@ public class RegisterGAEAsync extends AsyncTask<Context,Void,String> {
     Context context;
     MyBean myBean = null;
     String temp = null;
+    String name  = null;
 
 
+
+
+    //TODO: Delet after building User Framework
     @Override
     protected String doInBackground(Context... params) {
 
         context =params[0];
 
-        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), MainActivity.credential)
+                .setApplicationName("soringcloudapp")
                 .setRootUrl("https://soringcloudapp.appspot.com/_ah/api/");
 
         MyApi myApi = builder.build();
+
         try {
-            Log.e("pretty","good");
+            Log.e("pretty","good " + MainActivity.credential.getSelectedAccountName());
 
-           temp =  myApi.sayHi("hey").execute().getData();
 
-            Log.e("temp",temp);
-            return temp;
+            return  myApi.sayHi("ahaln").execute().getData();
         } catch (IOException e) {
 
-            Log.e("e","---------"+e.getMessage());
+            Log.e("e","---------"+ e.getMessage());
             e.printStackTrace();
         }
 
@@ -52,6 +56,7 @@ public class RegisterGAEAsync extends AsyncTask<Context,Void,String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
 
+        Log.e("onpost",s);
         Toast.makeText(context,s,Toast.LENGTH_LONG).show();
 
     }

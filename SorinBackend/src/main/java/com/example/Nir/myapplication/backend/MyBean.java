@@ -4,7 +4,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 /** The object model for the data we are sending through endpoints */
-
+//TODO: Delet after building User Framework
 @Entity
 public class MyBean {
 

@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "soringcloudapp",
+    "project_number": "385934309476",
+    "name": "soringcloudapp"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385934309476:android:43fd5b1bf2e5a3f8",
+        "client_id": "android:com.example.android.sorin",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.example.android.sorin",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "385934309476-u3kl3v918fgdad1o0mu0hloap1gi4abg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.sorin",
+            "certificate_hash": "8E12758E712FAE9F84AB3D3E9A63CA2CE1DE86FA"
+          }
+        },
+        {
+          "client_id": "385934309476-qqbqncffi21qudjt3okkq8mjnc42smr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
