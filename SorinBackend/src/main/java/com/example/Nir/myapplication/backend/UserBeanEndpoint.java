@@ -1,6 +1,5 @@
-package com.example.Nir.myapplication.backend.EndPoints;
+package com.example.Nir.myapplication.backend;
 
-import com.example.Nir.myapplication.backend.Models.UserBean;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -32,8 +31,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
         version = "v1",
         resource = "userBean",
         namespace = @ApiNamespace(
-                ownerDomain = "Models.backend.myapplication.Nir.example.com",
-                ownerName = "Models.backend.myapplication.Nir.example.com",
+                ownerDomain = "backend.myapplication.Nir.example.com",
+                ownerName = "backend.myapplication.Nir.example.com",
                 packagePath = ""
         )
 )
@@ -51,19 +50,19 @@ public class UserBeanEndpoint {
     /**
      * Returns the {@link UserBean} with the corresponding ID.
      *
-     * @param userEmail the ID of the entity to be retrieved
+     * @param id the ID of the entity to be retrieved
      * @return the entity with the corresponding ID
      * @throws NotFoundException if there is no {@code UserBean} with the provided ID.
      */
     @ApiMethod(
             name = "get",
-            path = "userBean/{userEmail}",
+            path = "userBean/{id}",
             httpMethod = ApiMethod.HttpMethod.GET)
-    public UserBean get(@Named("userEmail") String userEmail) throws NotFoundException {
-        logger.info("Getting UserBean with ID: " + userEmail);
-        UserBean userBean = ofy().load().type(UserBean.class).id(userEmail).now();
+    public UserBean get(@Named("id") Long id) throws NotFoundException {
+        logger.info("Getting UserBean with ID: " + id);
+        UserBean userBean = ofy().load().type(UserBean.class).id(id).now();
         if (userBean == null) {
-            throw new NotFoundException("Could not find UserBean with ID: " + userEmail);
+            throw new NotFoundException("Could not find UserBean with ID: " + id);
         }
         return userBean;
     }
@@ -77,12 +76,12 @@ public class UserBeanEndpoint {
             httpMethod = ApiMethod.HttpMethod.POST)
     public UserBean insert(UserBean userBean) {
         // Typically in a RESTful API a POST does not have a known ID (assuming the ID is used in the resource path).
-        // You should validate that userBean.userEmail has not been set. If the ID type is not supported by the
+        // You should validate that userBean.id has not been set. If the ID type is not supported by the
         // Objectify ID generator, e.g. long or String, then you should generate the unique ID yourself prior to saving.
         //
         // If your client provides the ID then you should probably use PUT instead.
         ofy().save().entity(userBean).now();
-        logger.info("Created UserBean with ID: " + userBean.getUserEmail());
+        logger.info("Created UserBean with ID: " + userBean.getId());
 
         return ofy().load().entity(userBean).now();
     }
@@ -90,19 +89,19 @@ public class UserBeanEndpoint {
     /**
      * Updates an existing {@code UserBean}.
      *
-     * @param userEmail the ID of the entity to be updated
-     * @param userBean  the desired state of the entity
+     * @param id       the ID of the entity to be updated
+     * @param userBean the desired state of the entity
      * @return the updated version of the entity
-     * @throws NotFoundException if the {@code userEmail} does not correspond to an existing
+     * @throws NotFoundException if the {@code id} does not correspond to an existing
      *                           {@code UserBean}
      */
     @ApiMethod(
             name = "update",
-            path = "userBean/{userEmail}",
+            path = "userBean/{id}",
             httpMethod = ApiMethod.HttpMethod.PUT)
-    public UserBean update(@Named("userEmail") String userEmail, UserBean userBean) throws NotFoundException {
+    public UserBean update(@Named("id") Long id, UserBean userBean) throws NotFoundException {
         // TODO: You should validate your ID parameter against your resource's ID here.
-        checkExists(userEmail);
+        checkExists(id);
         ofy().save().entity(userBean).now();
         logger.info("Updated UserBean: " + userBean);
         return ofy().load().entity(userBean).now();
@@ -111,18 +110,18 @@ public class UserBeanEndpoint {
     /**
      * Deletes the specified {@code UserBean}.
      *
-     * @param userEmail the ID of the entity to delete
-     * @throws NotFoundException if the {@code userEmail} does not correspond to an existing
+     * @param id the ID of the entity to delete
+     * @throws NotFoundException if the {@code id} does not correspond to an existing
      *                           {@code UserBean}
      */
     @ApiMethod(
             name = "remove",
-            path = "userBean/{userEmail}",
+            path = "userBean/{id}",
             httpMethod = ApiMethod.HttpMethod.DELETE)
-    public void remove(@Named("userEmail") String userEmail) throws NotFoundException {
-        checkExists(userEmail);
-        ofy().delete().type(UserBean.class).id(userEmail).now();
-        logger.info("Deleted UserBean with ID: " + userEmail);
+    public void remove(@Named("id") Long id) throws NotFoundException {
+        checkExists(id);
+        ofy().delete().type(UserBean.class).id(id).now();
+        logger.info("Deleted UserBean with ID: " + id);
     }
 
     /**
@@ -150,11 +149,11 @@ public class UserBeanEndpoint {
         return CollectionResponse.<UserBean>builder().setItems(userBeanList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
     }
 
-    private void checkExists(String userEmail) throws NotFoundException {
+    private void checkExists(Long id) throws NotFoundException {
         try {
-            ofy().load().type(UserBean.class).id(userEmail).safe();
+            ofy().load().type(UserBean.class).id(id).safe();
         } catch (com.googlecode.objectify.NotFoundException e) {
-            throw new NotFoundException("Could not find UserBean with ID: " + userEmail);
+            throw new NotFoundException("Could not find UserBean with ID: " + id);
         }
     }
 }

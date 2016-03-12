@@ -1,4 +1,4 @@
-package com.example.Nir.myapplication.backend.Models;
+package com.example.Nir.myapplication.backend;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -12,14 +12,20 @@ import com.googlecode.objectify.annotation.Index;
 public class UserBean {
 
     @Id
+    Long id;
+
+    @Index
     String userEmail;
 
     @Index
     String userPhone;
 
-    public UserBean(String userEmail, String userPhone) {
-        this.userEmail = userEmail;
-        this.userPhone = userPhone;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserEmail() {

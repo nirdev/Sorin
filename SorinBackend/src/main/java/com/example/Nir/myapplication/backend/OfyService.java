@@ -10,6 +10,7 @@ import com.googlecode.objectify.ObjectifyService;
 public class OfyService {
     static {
         factory().register(MyBean.class);
+        factory().register(UserBean.class);
 
     }
 

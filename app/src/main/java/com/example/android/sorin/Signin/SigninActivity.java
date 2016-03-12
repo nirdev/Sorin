@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +15,10 @@ import com.example.android.sorin.Constants;
 import com.example.android.sorin.R;
 import com.example.android.sorin.Util.Util;
 import com.example.android.sorin.model.Country;
+import com.example.nir.myapplication.backend.models.userBeanApi.model.UserBean;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+
+//import com.example.Nir.myapplication.backend.UserBean;
 
 public class SigninActivity extends AppCompatActivity implements AsyncResponseIPLocation {
 
@@ -33,7 +35,9 @@ public class SigninActivity extends AppCompatActivity implements AsyncResponseIP
     private SharedPreferences settings;
 
     //GoogleAccountCredential initializer
-    public static GoogleAccountCredential credential;
+    private static GoogleAccountCredential credential;
+
+    private UserBean userBean = new UserBean();
 
     private Button choose_country_btn;
     private TextView country_prefix_textview;
@@ -78,6 +82,7 @@ public class SigninActivity extends AppCompatActivity implements AsyncResponseIP
             chooseAccount();
         }
 
+
     }
 
     // set account name in shared prefrences and in local variable accountname
@@ -88,6 +93,7 @@ public class SigninActivity extends AppCompatActivity implements AsyncResponseIP
         editor.apply();
         credential.setSelectedAccountName(accountName);
         this.accountName = accountName;
+        userBean.setUserEmail(accountName);
     }
 
     //Calls google sign-in activity - open fragment for user to choose his google account
@@ -140,11 +146,16 @@ public class SigninActivity extends AppCompatActivity implements AsyncResponseIP
     }
 
 
-    //User finish insertphone and clicked next
+    //User finish insert phone and clicked next
     public void onClickSigninBtn(View view) {
 
         userPhone = (EditText) findViewById(R.id.user_phone_signup_XMLID);
-        Log.e("userphoneis", userPhone.getText() + "");
+        country_prefix_textview = (TextView) findViewById(R.id.country_code_signup_XMLID);
+
+        userBean.setUserPhone(country_prefix_textview.getText().toString() + userPhone.getText());
+
+        new RegisterUserOnBackendAsync().execute(userBean);
+
     }
 
 
