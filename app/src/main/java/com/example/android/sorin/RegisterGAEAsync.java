@@ -26,20 +26,20 @@ public class RegisterGAEAsync extends AsyncTask<Context,Void,String> {
 
 
 
-    //TODO: Delet after building User Framework
+    //TODO: Delete after building User Framework
     @Override
     protected String doInBackground(Context... params) {
 
         context =params[0];
 
-        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), MainActivity.credential)
+        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                 .setApplicationName("soringcloudapp")
                 .setRootUrl("https://soringcloudapp.appspot.com/_ah/api/");
 
         MyApi myApi = builder.build();
 
         try {
-            Log.e("pretty","good " + MainActivity.credential.getSelectedAccountName());
+
 
 
             return  myApi.sayHi("ahaln").execute().getData();
