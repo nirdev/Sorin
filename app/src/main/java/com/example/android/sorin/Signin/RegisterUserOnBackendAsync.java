@@ -32,6 +32,7 @@ public class RegisterUserOnBackendAsync extends AsyncTask<UserBean,Void,UserBean
        UserBeanApi userBeanApi = builder.build();
 
         try {
+
             return userBeanApi.insert(params[0]).execute();
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,5 +46,6 @@ public class RegisterUserOnBackendAsync extends AsyncTask<UserBean,Void,UserBean
     @Override
     protected void onPostExecute(UserBean userBean) {
         super.onPostExecute(userBean);
+        Log.e("User"," Signed In on server,auto-genrated");
     }
 }
