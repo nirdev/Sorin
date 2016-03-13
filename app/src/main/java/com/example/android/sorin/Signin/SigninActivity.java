@@ -10,15 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.sorin.Constants;
 import com.example.android.sorin.R;
 import com.example.android.sorin.Util.Util;
 import com.example.android.sorin.model.Country;
-import com.example.nir.myapplication.backend.models.userBeanApi.model.UserBean;
+import com.example.nir.myapplication.backend.userBeanApi.model.UserBean;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
-//import com.example.Nir.myapplication.backend.UserBean;
 
 public class SigninActivity extends AppCompatActivity implements AsyncResponseIPLocation {
 
@@ -152,10 +152,20 @@ public class SigninActivity extends AppCompatActivity implements AsyncResponseIP
         userPhone = (EditText) findViewById(R.id.user_phone_signup_XMLID);
         country_prefix_textview = (TextView) findViewById(R.id.country_code_signup_XMLID);
 
-        userBean.setUserPhone(country_prefix_textview.getText().toString() + userPhone.getText());
+        //Validate phone number using Util isValidPhone method
+        if (Util.isValidPhone(userPhone.getText().toString(),country_prefix_textview.getText().toString())) {
 
-        new RegisterUserOnBackendAsync().execute(userBean);
+            //Set userBean prefix + phone
+            userBean.setUserPhone(country_prefix_textview.getText().toString() + userPhone.getText());
 
+            //Register user on server
+            new RegisterUserOnBackendAsync(this).execute(userBean);
+        }else {
+            //Phone not valid Toast
+            Toast.makeText(this,
+                    "Phone number " + userPhone.getText().toString() +" is not Valid "
+                    ,Toast.LENGTH_LONG ).show();
+        }
     }
 
 

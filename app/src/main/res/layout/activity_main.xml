@@ -9,17 +9,4 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.android.sorin.MainActivity">
 
-    <Button
-        android:id="@+id/GoToSignin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:onClick="GoToSignin"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/GoToSignin"
-        android:text="CheckBackend"
-        android:onClick="CheckBackend"/>
 </RelativeLayout>

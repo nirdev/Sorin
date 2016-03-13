@@ -1,6 +1,7 @@
 package com.example.android.sorin.Util;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,5 +51,13 @@ public class Util {
             }
         }
 
+    }
+    public static boolean isValidPhone(String phone,String prefix){
+        Boolean mIsvalidPhone;
+
+        mIsvalidPhone = phone.length() < 11 && phone.length() > 7;
+
+        Log.e("mIsvalidPhone",mIsvalidPhone.toString());
+        return mIsvalidPhone;
     }
 }
