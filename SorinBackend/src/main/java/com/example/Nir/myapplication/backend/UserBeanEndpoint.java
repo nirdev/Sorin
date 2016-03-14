@@ -11,6 +11,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,13 +20,7 @@ import javax.inject.Named;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-/**
- * WARNING: This generated code is intended as a sample or starting point for using a
- * Google Cloud Endpoints RESTful API with an Objectify entity. It provides no data access
- * restrictions and no data validation.
- * <p/>
- * DO NOT deploy this code unchanged as part of a real application to real users.
- */
+
 @Api(
         name = "userBeanApi",
         version = "v1",
@@ -61,68 +56,94 @@ public class UserBeanEndpoint {
     public UserBean get(@Named("id") Long id) throws NotFoundException {
         logger.info("Getting UserBean with ID: " + id);
         UserBean userBean = ofy().load().type(UserBean.class).id(id).now();
+
         if (userBean == null) {
             throw new NotFoundException("Could not find UserBean with ID: " + id);
         }
         return userBean;
     }
 
-    /**
-     * Inserts a new {@code UserBean}.
-     */
+
     @ApiMethod(
-            name = "insert",
+            name = "register",
             path = "userBean",
             httpMethod = ApiMethod.HttpMethod.POST)
-    public UserBean insert(UserBean userBean) {
+    public UserBean register(UserBean userBean) {
         // Typically in a RESTful API a POST does not have a known ID (assuming the ID is used in the resource path).
         // You should validate that userBean.id has not been set. If the ID type is not supported by the
         // Objectify ID generator, e.g. long or String, then you should generate the unique ID yourself prior to saving.
         //
         // If your client provides the ID then you should probably use PUT instead.
+
+
+        //TODO: delete when finish building friend list
+//        LinkedHashMap< String, Long> friendsList = new LinkedHashMap<>();
+//        friendsList.put("examplegogo",123l);
+//        friendsList.put("examplegogo1",123l);
+//        friendsList.put("examplegogo2",123l);
+//        userBean.setUserFriends(friendsList);
+
         ofy().save().entity(userBean).now();
         logger.info("Created UserBean with ID: " + userBean.getId());
 
         return ofy().load().entity(userBean).now();
     }
 
+
+
     /**
      * Updates an existing {@code UserBean}.
      *
      * @param id       the ID of the entity to be updated
-     * @param userBean the desired state of the entity
-     * @return the updated version of the entity
+     * @param mContactsPhone key = Contact phone Value = contact Name
+     * @return HashMap < Contatct name , userBeanId>
      * @throws NotFoundException if the {@code id} does not correspond to an existing
      *                           {@code UserBean}
      */
     @ApiMethod(
-            name = "update",
+            name = "buildFriendsList",
             path = "userBean/{id}",
             httpMethod = ApiMethod.HttpMethod.PUT)
-    public UserBean update(@Named("id") Long id, UserBean userBean) throws NotFoundException {
-        // TODO: You should validate your ID parameter against your resource's ID here.
-        checkExists(id);
+    public LinkedHashMap<String, Long> buildFriendsList(@Named("id") Long id,
+                                                  @Named("mContactsPhone") ArrayList<String> mContactsPhone ,
+                                                  @Named("mContactsName") ArrayList<String> mContactsName  ) {
+        Long mFriendId;
+
+        /*
+        @params - deletDuplicatPhones() -  because string is the Map key if the user have phone
+        duplicates they being automatically deleted by the hashPap
+        */
+        LinkedHashMap<String, Long> friendsList = new LinkedHashMap<>();
+
+
+        //Loop on User ContactList
+        for (int i = 0; i < mContactsPhone.size(); i++){
+
+            //mFriend = result of checkExistsByPhone with Param of current phone from mContactList
+            mFriendId = checkExistsByPhone(mContactsPhone.get(i));
+
+           /*
+            Validate that the phone is for register user in our data,
+            if not the phone not added to the new "FriendsList"
+            */
+            if(mFriendId != null){
+                friendsList.put(mContactsName.get(i) , mFriendId);
+            }
+        }
+
+        //Load User entity from Id
+        UserBean userBean =  ofy().load().type(UserBean.class).id(id).safe();
+
+        //Set the specific entity the friend list
+        userBean.setUserFriends(friendsList);
+
+        //Save the entity back in the datastore
         ofy().save().entity(userBean).now();
-        logger.info("Updated UserBean: " + userBean);
-        return ofy().load().entity(userBean).now();
+
+        return friendsList;
     }
 
-    /**
-     * Deletes the specified {@code UserBean}.
-     *
-     * @param id the ID of the entity to delete
-     * @throws NotFoundException if the {@code id} does not correspond to an existing
-     *                           {@code UserBean}
-     */
-    @ApiMethod(
-            name = "remove",
-            path = "userBean/{id}",
-            httpMethod = ApiMethod.HttpMethod.DELETE)
-    public void remove(@Named("id") Long id) throws NotFoundException {
-        checkExists(id);
-        ofy().delete().type(UserBean.class).id(id).now();
-        logger.info("Deleted UserBean with ID: " + id);
-    }
+
 
     /**
      * List all entities.
@@ -135,7 +156,8 @@ public class UserBeanEndpoint {
             name = "list",
             path = "userBean",
             httpMethod = ApiMethod.HttpMethod.GET)
-    public CollectionResponse<UserBean> list(@Nullable @Named("cursor") String cursor, @Nullable @Named("limit") Integer limit) {
+    public CollectionResponse<UserBean> list(@Nullable @Named("cursor") String cursor,
+                                             @Nullable @Named("limit") Integer limit) {
         limit = limit == null ? DEFAULT_LIST_LIMIT : limit;
         Query<UserBean> query = ofy().load().type(UserBean.class).limit(limit);
         if (cursor != null) {
@@ -149,11 +171,25 @@ public class UserBeanEndpoint {
         return CollectionResponse.<UserBean>builder().setItems(userBeanList).setNextPageToken(queryIterator.getCursor().toWebSafeString()).build();
     }
 
-    private void checkExists(Long id) throws NotFoundException {
+    private Boolean checkExistsById(Long id)  {
         try {
             ofy().load().type(UserBean.class).id(id).safe();
+            return true;
         } catch (com.googlecode.objectify.NotFoundException e) {
-            throw new NotFoundException("Could not find UserBean with ID: " + id);
+            return false;
         }
+
+    }
+    private Long checkExistsByPhone(String phone){
+
+        UserBean userBean =  ofy().load().type(UserBean.class).filter("userPhone", phone).first().now();
+        if (userBean != null){
+            return userBean.getId();
+        }
+        else {
+            return null;
+        }
+
+
     }
 }

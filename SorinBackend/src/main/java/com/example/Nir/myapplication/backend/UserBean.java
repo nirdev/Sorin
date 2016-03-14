@@ -4,6 +4,9 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 /**
  * Created by Nir on 3/12/2016.
  */
@@ -12,13 +15,24 @@ import com.googlecode.objectify.annotation.Index;
 public class UserBean {
 
     @Id
-    Long id;
+    private Long id;
 
     @Index
-    String userEmail;
+    private String userEmail;
 
     @Index
-    String userPhone;
+    private String userPhone;
+
+
+    /**
+     * @params
+     * LinkedHashMap <String,Long> LinkedHashMap of user's friends,
+     * String for friend name as it save in user phone
+     * Long for friend Userbean Entity unique id in datastore
+     */
+    @Index
+    private LinkedHashMap<String,Long> userFriends = new LinkedHashMap<>();
+
 
     public Long getId() {
         return id;
@@ -42,5 +56,13 @@ public class UserBean {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public HashMap<String, Long> getUserFriends() {
+        return userFriends;
+    }
+
+    public void setUserFriends(LinkedHashMap<String, Long> userFriends) {
+        this.userFriends = userFriends;
     }
 }
