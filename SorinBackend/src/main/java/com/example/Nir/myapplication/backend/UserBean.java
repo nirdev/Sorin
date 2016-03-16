@@ -31,7 +31,7 @@ public class UserBean {
      * Long for friend Userbean Entity unique id in datastore
      */
     @Index
-    private LinkedHashMap<String,Long> userFriends = new LinkedHashMap<>();
+    private LinkedHashMap<String,String> userFriends = new LinkedHashMap<>();
 
 
     public Long getId() {
@@ -58,11 +58,11 @@ public class UserBean {
         this.userPhone = userPhone;
     }
 
-    public HashMap<String, Long> getUserFriends() {
+    public HashMap<String, String> getUserFriends() {
         return userFriends;
     }
 
-    public void setUserFriends(LinkedHashMap<String, Long> userFriends) {
+    public void setUserFriends(LinkedHashMap<String, String> userFriends) {
         this.userFriends = userFriends;
     }
 }

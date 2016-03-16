@@ -95,7 +95,7 @@ public class UserBeanEndpoint {
      * Updates an existing {@code UserBean}.
      *
      * @param id       the ID of the entity to be updated
-     * @param mContactsPhone key = Contact phone Value = contact Name
+     * @param hashMapWarrper key = Contact ,phone Value = contact Name
      * @return HashMap < Contatct name , userBeanId>
      * @throws NotFoundException if the {@code id} does not correspond to an existing
      *                           {@code UserBean}
@@ -103,31 +103,35 @@ public class UserBeanEndpoint {
     @ApiMethod(
             name = "buildFriendsList",
             path = "userBean/{id}",
-            httpMethod = ApiMethod.HttpMethod.PUT)
-    public LinkedHashMap<String, Long> buildFriendsList(@Named("id") Long id,
-                                                  @Named("mContactsPhone") ArrayList<String> mContactsPhone ,
-                                                  @Named("mContactsName") ArrayList<String> mContactsName  ) {
+            httpMethod = ApiMethod.HttpMethod.POST)
+    public UserBean buildFriendsList(@Named("id") Long id, LinkedHashMapWarrper hashMapWarrper) {
+
+
         Long mFriendId;
+        LinkedHashMap<String,String> newFriendListHM = new LinkedHashMap<>();
 
-        /*
-        @params - deletDuplicatPhones() -  because string is the Map key if the user have phone
+
+        //Set contactList from client side in temporary LHM
+        LinkedHashMap<String,String> oldFriendListHM;
+        oldFriendListHM = hashMapWarrper.getLinkedHashMap();
+
+        /**
+        @params - deleteDuplicatePhoneNumbers() -  because PhoneNumber is the Map key if the user have phone
         duplicates they being automatically deleted by the hashPap
-        */
-        LinkedHashMap<String, Long> friendsList = new LinkedHashMap<>();
-
+        **/
 
         //Loop on User ContactList
-        for (int i = 0; i < mContactsPhone.size(); i++){
+        for (String key : oldFriendListHM.keySet()){
 
             //mFriend = result of checkExistsByPhone with Param of current phone from mContactList
-            mFriendId = checkExistsByPhone(mContactsPhone.get(i));
+            mFriendId = checkExistsByPhone(key);
 
            /*
             Validate that the phone is for register user in our data,
             if not the phone not added to the new "FriendsList"
             */
             if(mFriendId != null){
-                friendsList.put(mContactsName.get(i) , mFriendId);
+                newFriendListHM.put(key , mFriendId.toString());
             }
         }
 
@@ -135,13 +139,46 @@ public class UserBeanEndpoint {
         UserBean userBean =  ofy().load().type(UserBean.class).id(id).safe();
 
         //Set the specific entity the friend list
-        userBean.setUserFriends(friendsList);
+        userBean.setUserFriends(newFriendListHM);
 
         //Save the entity back in the datastore
         ofy().save().entity(userBean).now();
 
-        return friendsList;
+
+        return ofy().load().type(UserBean.class).id(id).now();
     }
+
+
+
+//        LinkedHashMap<String, Long> friendsList = new LinkedHashMap<>();
+//        Long mFriendId;
+//
+//        //Loop on User ContactList
+//        for (int i = 0; i < mContactsPhone.size(); i++){
+//
+//            //mFriend = result of checkExistsByPhone with Param of current phone from mContactList
+//            mFriendId = checkExistsByPhone(mContactsPhone.get(i));
+//
+//           /*
+//            Validate that the phone is for register user in our data,
+//            if not the phone not added to the new "FriendsList"
+//            */
+//            if(mFriendId != null){
+//                friendsList.put(mContactsName.get(i) , mFriendId);
+//            }
+//        }
+//
+//        //Load User entity from Id
+//        UserBean userBean =  ofy().load().type(UserBean.class).id(id).safe();
+//
+//        //Set the specific entity the friend list
+//        userBean.setUserFriends(friendsList);
+//
+//        //Save the entity back in the datastore
+//        ofy().save().entity(userBean).now();
+//
+//        return friendsList;
+
 
 
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.android.sorin.friendListBuilder.friendListBuilderService;
 import com.example.android.sorin.signin.SigninActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,8 +26,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        Intent intent = new Intent(this,friendListBuilderService.class);
+        startService(intent);
+
 
     }
+
 
 
 

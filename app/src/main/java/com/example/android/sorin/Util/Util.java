@@ -1,7 +1,6 @@
 package com.example.android.sorin.Util;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,12 +51,41 @@ public class Util {
         }
 
     }
+    //Clean the phone number and add prefix
+    public static String getCleanNumber(String number,String prefix){
+
+        String mCleannumber = null;
+        String mNumber = number;
+        String mPrefix = prefix;
+        String firstChar = "";
+
+        if (mNumber.startsWith("+")) {
+            firstChar = "+";
+        }
+
+        mNumber = mNumber.replaceAll("[^\\d]", ""); //Delete all non-numeric charts
+        mNumber = firstChar + mNumber; // Append Plus only if was one
+
+
+
+        if (mNumber.startsWith("+") && mNumber.length() < 16 ){
+
+            mCleannumber = mNumber;
+
+        }
+        else if (mNumber.length() < 16 && mNumber.length() > 7) {
+
+            mNumber = mNumber.replaceFirst("^0*", ""); //Delete all first Zeros
+            mCleannumber = mPrefix + mNumber; //Add prefix to the clean number
+        }
+
+        return mCleannumber;
+    }
+
     public static boolean isValidPhone(String phone,String prefix){
         Boolean mIsvalidPhone;
 
         mIsvalidPhone = phone.length() < 11 && phone.length() > 7;
-
-        Log.e("mIsvalidPhone",mIsvalidPhone.toString());
         return mIsvalidPhone;
     }
 }
